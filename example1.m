@@ -1,3 +1,4 @@
+% Example 1: 2-link manipulator and animation basics
 clear
 clf
 
