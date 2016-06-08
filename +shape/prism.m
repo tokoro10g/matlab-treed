@@ -1,6 +1,6 @@
 function h = prism(strngon, n, varargin)
 %PRISM Create a prism
-%   PRISM('ngon', n, ...) creates an n-prism graphic object and returns its
+%   PRISM('ngon', N, ...) creates an N-prism graphic object and returns its
 %   handle. Note that the first argument should be the string 'ngon'.
 
 if ~strcmp('ngon', strngon)

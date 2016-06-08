@@ -1,8 +1,10 @@
 function printtreed(tree)
 %PRINTTREED Gracefully print TreeD cell structure
-%   PRINTTREED(tree) prints out TreeD cell structure better than DISP or
+%   PRINTTREED(TREE) prints out TreeD cell structure better than DISP or
 %   CELLDISP function. This function is useful when examining generated
-%   TreeD cell structure.
+%   TreeD cell structures.
+%
+%   See also PLOTTREED
 
 if isempty(inputname(1))
     disp('tree = {')

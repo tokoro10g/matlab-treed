@@ -1,24 +1,36 @@
-function handles = plottreed(tree)
+function tdhandles = plottreed(tree, varargin)
 %PLOTTREED Plot TreeD cell structure
-%   Detailed explanation goes here
+%   TDHANDLES = PLOTTREED(TREE) plots TreeD cell structure TREE on figure.
+%
+%   TDHANDLES = PLOTTREED(TREE, 'Parent', TDHANDLE) plots TreeD cell
+%   structure under TDHANDLE.
+%
+%   See also MODIFYTREED, DESTROYTREED, PRINTTREED
 
 root = struct;
 root.id = 'root';
-root.handle = hgtransform;
-root.transform = hgtransform;
+root.handle = [];
+root.transform = hgtransform('Tag', 'root');
 root.scale = [0 0 0];
 
-handles = processlevel(tree,root);
+if nargin > 2
+    if strcmp('Parent', varargin{1})
+        set(root.transform, 'Parent', varargin{2}.transform, ...
+            'Matrix', makehgtform('translate', [varargin{2}.scale(1) 0 0]));
+    end
+end
+
+tdhandles = processlevel(tree,root);
 
 end
 
-function handles = processlevel(tree, parent, varargin)
+function tdhandles = processlevel(tree, parent, varargin)
 
 n = size(tree, 1);
 if nargin > 2
-    handles = varargin{1};
+    tdhandles = varargin{1};
 else
-    handles = struct;
+    tdhandles = struct;
 end
 
 % iterate over nodes
@@ -87,7 +99,7 @@ for k = 1:n
             clear newid
         end
         % resolve duplicated IDs
-        ids = matlab.lang.makeUniqueStrings(['node'; fieldnames(handles); id]);
+        ids = matlab.lang.makeUniqueStrings(['node'; fieldnames(tdhandles); id]);
         if ~strcmp(id, ids{end})
             if id_found
                 warning('Node ID ''%s'' already exists. Renamed to ''%s''.', id, ids{end});
@@ -97,17 +109,17 @@ for k = 1:n
             id = ids{end};
         end
         
-        handles.(id).id = id;
-        handles.(id).handle = handle;
-        handles.(id).function = func;
-        handles.(id).args = args(1:end-2);
-        handles.(id).transform = htrans;
-        handles.(id).scale = scale;
-        handles.(id).parent_id = parent.id;
+        tdhandles.(id).id = id;
+        tdhandles.(id).handle = handle;
+        tdhandles.(id).function = func;
+        tdhandles.(id).args = args(1:end-2);
+        tdhandles.(id).transform = htrans;
+        tdhandles.(id).scale = scale;
+        tdhandles.(id).parent_id = parent.id;
         
         % process children
         if size(children, 1) > 0
-            handles = processlevel(children, handles.(id), handles);
+            tdhandles = processlevel(children, tdhandles.(id), tdhandles);
         end
     else
         error('%s\nCell location: (%d,1)','The first element of each node must be a function_handler.',k)
